@@ -1,9 +1,12 @@
 <template>
-  <v-app>
-    <MainHeader></MainHeader>
+  <v-app :style="{
+    background: $vuetify.theme.themes[theme].background
+  }">
+    <MainHeader v-if="headerType == 'main'"></MainHeader>
+    <UserHeader v-else-if="headerType == 'user'"></UserHeader>
 
     <v-main>
-      <router-view/>
+      <router-view />
     </v-main>
   </v-app>
 </template>
@@ -13,10 +16,12 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 
 import MainHeader from './components/MainHeader.vue';
+import UserHeader from './components/UserHeader.vue';
 
 @Component({
   components: {
-    MainHeader
+    MainHeader,
+    UserHeader
   }
 })
 export default class App extends Vue {
@@ -26,11 +31,18 @@ export default class App extends Vue {
     this.message = 'Hello World!';
   }
 
+  get theme() {
+    return (this.$vuetify.theme.dark) ? 'dark' : 'light'
+  }
+
+  get headerType() {
+    return this.$route.meta?.header || 'main';
+  }
 }
 </script>
 
 <style lang="scss">
-  body {
-    min-height: 150vh;
-  }
+.v-application {
+  //min-height: 150vh;
+}
 </style>

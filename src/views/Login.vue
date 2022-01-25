@@ -3,7 +3,7 @@
         <v-container fluid>
             <v-row>
                 <v-col class="mx-auto" cols="12" sm="6">
-                    <v-card class="elevation-0">
+                    <v-card>
                         <v-card-title class="headline">
                             <span>Login</span>
                         </v-card-title>
@@ -26,13 +26,7 @@
                         </v-card-text>
                         <v-card-actions>
                             <v-spacer></v-spacer>
-                            <v-btn
-                                color="primary"
-                                @click="login"
-                                :disabled="!isValid"
-                            >
-                                Login
-                            </v-btn>
+                            <v-btn color="primary" @click="login" :disabled="!isValid">Login</v-btn>
                         </v-card-actions>
                     </v-card>
                 </v-col>
@@ -68,5 +62,4 @@ export default class LoginPage extends Vue {
 </script>
 
 <style>
-
 </style>

@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
 import Home from '../views/Home.vue'
 import Login from '../views/Login.vue'
+import UserProfile from '../views/User/UserProfile.vue';
 
 Vue.use(VueRouter)
 
@@ -23,6 +24,33 @@ const routes: Array<RouteConfig> = [
     path: '/login',
     name: 'Login',
     component: Login
+  },
+  {
+    path: '/user',
+    redirect: '/user/overview',
+    name: 'Login',
+    component: UserProfile,
+    meta: {
+      header: 'user'
+    },
+    children: [
+      {
+        path: 'overview',
+        name: 'UserOverview',
+        meta: {
+          header: 'user'
+        },
+        component: () => import('../views/User/Overview.vue')
+      },
+      {
+        path: 'settings',
+        name: 'UserSettings',
+        meta: {
+          header: 'user'
+        },
+        component: () => import('../views/User/Settings.vue')
+      },
+    ]
   }
 ]
 
