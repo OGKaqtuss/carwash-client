@@ -1,7 +1,7 @@
 <template>
     <v-layout align-center class="header-navigation">
         <v-container fluid class="d-none d-sm-flex align-center">
-            <v-tabs class="header-navigation__tabs">
+            <v-tabs class="header-navigation__tabs" color="white">
                 <v-tab v-for="item in items" :key="item.route">
                     <router-link :to="{ name: item.route }" tag="span">{{ item.name }}</router-link>
                 </v-tab>
