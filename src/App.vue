@@ -1,12 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar
-      app
-      color="primary"
-      dark
-    >
-    <h1>{{ message }}</h1>
-    </v-app-bar>
+    <MainHeader></MainHeader>
 
     <v-main>
       <router-view/>
@@ -18,15 +12,25 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 
+import MainHeader from './components/MainHeader.vue';
+
 @Component({
-  name: 'App'
+  components: {
+    MainHeader
+  }
 })
 export default class App extends Vue {
   message = '';
 
-  mounted() {
+  mounted(): void {
     this.message = 'Hello World!';
   }
 
 }
 </script>
+
+<style lang="scss">
+  body {
+    min-height: 150vh;
+  }
+</style>

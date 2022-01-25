@@ -1,0 +1,19 @@
+@import '~vuetify/src/styles/styles.sass';
+
+@mixin media-breakpoint-down($media, $breakpoints: $display-breakpoints) {
+    @media #{map-get($breakpoints, '#{$media}-and-down')} {
+        @content;
+    }
+}
+
+@mixin media-breakpoint-up($media, $breakpoints: $display-breakpoints) {
+    @media #{map-get($breakpoints, '#{$media}-and-up')} {
+        @content;
+    }
+}
+
+@mixin media-breakpoint-only($media, $breakpoints: $display-breakpoints) {
+    @media #{map-get($breakpoints, '#{$media}-only')} {
+        @content;
+    }
+}
