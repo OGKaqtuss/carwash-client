@@ -39,6 +39,8 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 
+import authService from '@/services/auth.service';
+
 @Component
 export default class LoginPage extends Vue {
     email = '';
@@ -56,7 +58,15 @@ export default class LoginPage extends Vue {
     }
 
     login() {
-        console.log("HELLO");
+        authService.login({
+            email: this.email,
+            password: this.password,
+        }).then((res) => {
+            console.log(res);
+            this.$router.push({ name: 'UserProfile' });
+        }).catch((err) => {
+            console.log(err.response.data);
+        });
     }
 }
 </script>

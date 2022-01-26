@@ -2,6 +2,14 @@
     <div class="user-header">
         <v-app-bar dark color="primary" hide-on-scroll scroll-threshold="48" app>
             <v-container fluid class="d-flex align-center">
+                <v-toolbar-title class="d-sm-none">
+                    <router-link class="d-flex align-center" tag="div" to="/">
+                        <v-img max-width="48px" :src="require('@/assets/logo.png')"></v-img>
+
+                        <span class="pl-4">SuperWash</span>
+                    </router-link>
+                </v-toolbar-title>
+
                 <header-navigation></header-navigation>
             </v-container>
         </v-app-bar>
@@ -24,5 +32,12 @@ export default class UserHeader extends Vue {
 }
 </script>
 
-<style>
+<style lang="scss">
+.user-header {
+    .v-toolbar {
+        &__content {
+            padding: 0;
+        }
+    }
+}
 </style>

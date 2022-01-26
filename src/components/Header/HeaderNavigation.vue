@@ -39,7 +39,7 @@ import Component from 'vue-class-component';
 @Component({
     props: {
         items: {
-            type: Object,
+            type: Array,
             default: () => [
                 {
                     name: 'Home',

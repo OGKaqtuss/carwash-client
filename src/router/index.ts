@@ -4,6 +4,8 @@ import Home from '../views/Home.vue'
 import Login from '../views/Login.vue'
 import UserProfile from '../views/User/UserProfile.vue';
 
+import TokenService from '@/services/token.service';
+
 Vue.use(VueRouter)
 
 const routes: Array<RouteConfig> = [
@@ -28,10 +30,11 @@ const routes: Array<RouteConfig> = [
   {
     path: '/user',
     redirect: '/user/overview',
-    name: 'Login',
+    name: 'UserProfile',
     component: UserProfile,
     meta: {
-      header: 'user'
+      header: 'user',
+      requiresAuth: true
     },
     children: [
       {
@@ -59,5 +62,38 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
+
+router.beforeEach((to, from, next) => {
+  // Check if route (or any children routes) requires authentication
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+
+    if (TokenService.getLocalAccessToken() !== null) {
+      const user = TokenService.getUser();
+
+      if (user !== null) {
+
+        // Check if route (or any children routes) is restricted by role
+        if (to.matched.some(record => record.meta.requiresAdmin)) {
+          if (user.admin === false) {
+            return next({
+              name: 'UserProfile'
+            });
+          } else {
+            return next()
+          }
+        } else {
+          return next();
+        }
+      }
+    }
+  } else {
+    return next();
+  }
+
+  next({
+    path: '/login',
+    query: { redirect: to.fullPath }
+  });
+});
 
 export default router

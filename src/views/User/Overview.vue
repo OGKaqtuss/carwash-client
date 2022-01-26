@@ -2,23 +2,9 @@
     <div class="user-profile__overview">
         <v-row>
             <v-col md="6">
-                <v-sheet elevation="3" rounded class="user-profile__overview-history">
-                    <v-card-title>History</v-card-title>
+                <h2 v-if="user.isAdmin">Admin</h2>
 
-                    <v-card-text>
-                        <v-timeline class="user-profile__overview-history-timeline" align-top dense>
-                            <v-timeline-item small v-for="i in 10" :key="i">
-                                <v-layout justify-space-between align-center>
-                                    <h4 class="font-weight-semibold">Vaskning</h4>
-                                    <small>Mandag</small>
-                                </v-layout>
-
-                                <p class="mb-0">Betalt gennem medlemsskab</p>
-                                <router-link to="/">Aalborg, Gug</router-link>
-                            </v-timeline-item>
-                        </v-timeline>
-                    </v-card-text>
-                </v-sheet>
+                <WashHistory v-else></WashHistory>
             </v-col>
         </v-row>
     </div>
@@ -28,9 +14,18 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 
-@Component
-export default class UserOverview extends Vue {
+import WashHistory from '@/components/User/WashHistory.vue';
+import userService from '@/services/user.service';
 
+@Component({
+    components: {
+        WashHistory
+    }
+})
+export default class UserOverview extends Vue {
+    get user() {
+        return userService.user;
+    }
 }
 </script>
 

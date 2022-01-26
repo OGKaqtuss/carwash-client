@@ -18,6 +18,8 @@ import Component from 'vue-class-component';
 import MainHeader from './components/MainHeader.vue';
 import UserHeader from './components/UserHeader.vue';
 
+import userService, { User } from './services/user.service';
+
 @Component({
   components: {
     MainHeader,
@@ -28,7 +30,11 @@ export default class App extends Vue {
   message = '';
 
   mounted(): void {
-    this.message = 'Hello World!';
+    const user = userService.user;
+
+    if (user) {
+      this.initializeUser(user);
+    }
   }
 
   get theme() {
@@ -37,6 +43,10 @@ export default class App extends Vue {
 
   get headerType() {
     return this.$route.meta?.header || 'main';
+  }
+
+  initializeUser(user: User) {
+    this.$vuetify.theme.dark = user.darkTheme;
   }
 }
 </script>

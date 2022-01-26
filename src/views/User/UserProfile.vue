@@ -13,12 +13,12 @@
                 <v-list-item>
                     <v-list-item-icon>
                         <v-avatar color="primary" size="48">
-                            <span class="white--text text-h5">NC</span>
+                            <span class="white--text text-h5">{{ user.initials }}</span>
                         </v-avatar>
                     </v-list-item-icon>
 
                     <v-list-item-content>
-                        <v-list-item-title>Niclas Carlsen</v-list-item-title>
+                        <v-list-item-title>{{ user.fullName }}</v-list-item-title>
                     </v-list-item-content>
                 </v-list-item>
 
@@ -66,16 +66,18 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 
+import userService from '@/services/user.service';
+
 @Component
 export default class UserProfile extends Vue {
-    mounted() {
-        this.$vuetify
-    }
-
     get navigationDrawerHeaderStyle() {
         return {
             'height': `${this.$vuetify.application.top}px`,
         }
+    }
+
+    get user() {
+        return userService.user;
     }
 }
 </script>
