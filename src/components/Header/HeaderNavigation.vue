@@ -10,7 +10,7 @@
 
         <v-spacer></v-spacer>
 
-        <v-btn icon link :to="{ name: 'Login' }">
+        <v-btn icon link :to="accountPath">
             <v-icon>mdi-account</v-icon>
         </v-btn>
 
@@ -33,6 +33,7 @@
 </template>
 
 <script>
+import userService from '@/services/user.service';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 
@@ -51,6 +52,18 @@ import Component from 'vue-class-component';
 })
 export default class HeaderNavigation extends Vue {
     drawer = false;
+
+    get accountPath() {
+        if (this.user) {
+            return { name: 'UserOverview' };
+        } else {
+            return { name: 'Login' };
+        }
+    }
+
+    get user() {
+        return userService.user;
+    }
 }
 </script>
 
