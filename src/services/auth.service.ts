@@ -22,8 +22,6 @@ class AuthService extends ApiService {
     login(userData: IUserLoginData) {
         return this.axiosInstance.post('Auth/login', userData)
             .then((result) => {
-                console.log(result);
-
                 if (result.data.accessToken) {
                     tokenService.setUser(result.data);
                 }
@@ -39,8 +37,6 @@ class AuthService extends ApiService {
     register(user: IUserRegisterData) {
         return this.axiosInstance.post('Auth/register', user)
             .then((result) => {
-                console.log(result);
-
                 if (result.data.accessToken) {
                     tokenService.setUser(result.data);
                 }

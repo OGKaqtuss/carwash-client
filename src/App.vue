@@ -20,6 +20,8 @@ import UserHeader from './components/UserHeader.vue';
 
 import userService, { User } from './services/user.service';
 
+import Stomp from 'webstomp-client';
+
 @Component({
   components: {
     MainHeader,
@@ -28,6 +30,22 @@ import userService, { User } from './services/user.service';
 })
 export default class App extends Vue {
   message = '';
+
+  created() {
+    const sock = new WebSocket('ws://localhost:8080/ws');
+
+    const client = Stomp.over(sock);
+
+    client.connect('guest', 'guest', (frame) => {
+        console.log("CONNECTED");
+
+        this.$root.$emit('socketConnected', client);
+
+    }, (err) => {
+      console.log(err);
+      console.log('STOMP error: ' + err);
+    }, '/');
+  }
 
   mounted(): void {
     const user = userService.user;

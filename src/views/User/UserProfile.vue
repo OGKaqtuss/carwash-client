@@ -44,7 +44,7 @@
 
                 <v-divider></v-divider>
 
-                <v-list-item>
+                <v-list-item @click="logout">
                     <v-list-item-icon>
                         <v-icon>mdi-logout</v-icon>
                     </v-list-item-icon>
@@ -67,6 +67,7 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 
 import userService from '@/services/user.service';
+import authService from '@/services/auth.service';
 
 @Component
 export default class UserProfile extends Vue {
@@ -78,6 +79,13 @@ export default class UserProfile extends Vue {
 
     get user() {
         return userService.user;
+    }
+
+    logout() {
+        authService.logout();
+
+        this.$router.push({ name: 'Home' });
+        this.$router.go(0);
     }
 }
 </script>

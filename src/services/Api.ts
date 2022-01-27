@@ -1,6 +1,8 @@
 
 import axios, { AxiosInstance } from 'axios';
 
+import Vue from 'vue';
+
 import tokenService from './token.service';
 
 export const axiosInstance = axios.create({
@@ -19,6 +21,12 @@ axiosInstance.interceptors.request.use((config) => {
         }, config.headers || {})
     }
     return config;
+});
+
+axiosInstance.interceptors.response.use((response) => {
+    return response;
+}, (error) => {
+    Vue.$toast.error(error.toString());
 });
 
 export abstract class ApiService {

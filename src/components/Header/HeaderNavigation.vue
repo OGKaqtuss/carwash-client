@@ -45,6 +45,10 @@ import Component from 'vue-class-component';
                 {
                     name: 'Home',
                     route: 'Home',
+                },
+                {
+                    name: 'Find vaskehaller',
+                    route: 'CarWashes'
                 }
             ]
         }

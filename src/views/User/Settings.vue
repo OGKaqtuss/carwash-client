@@ -84,10 +84,7 @@ export default class UserSettings extends Vue {
         this.user.isSubscribed = this.subscribed;
 
         userService.update(this.user).then(() => {
-            /*this.$toast.open({
-                message: 'Settings saved',
-                type: 'success'
-            });*/
+            this.$toast.success('Settings saved');
         });
     }
 }
