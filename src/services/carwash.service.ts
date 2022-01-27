@@ -15,6 +15,7 @@ export interface ICarWash {
     address: string;
     status: WashStatus;
     price: number;
+    endDate: number;
 }
 
 export interface ICarWashList {
