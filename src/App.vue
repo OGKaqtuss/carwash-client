@@ -6,7 +6,7 @@
     <UserHeader v-else-if="headerType == 'user'"></UserHeader>
 
     <v-main>
-      <router-view />
+      <router-view :key="$route.path" />
     </v-main>
   </v-app>
 </template>
@@ -20,8 +20,6 @@ import UserHeader from './components/UserHeader.vue';
 
 import userService, { User } from './services/user.service';
 
-import Stomp from 'webstomp-client';
-
 @Component({
   components: {
     MainHeader,
@@ -32,14 +30,10 @@ export default class App extends Vue {
   message = '';
 
   created() {
-    const sock = new WebSocket('ws://localhost:8080/ws');
-
-    const client = Stomp.over(sock);
-
-    client.connect('guest', 'guest', (frame) => {
+    this.$socket.connect('guest', 'guest', (frame) => {
         console.log("CONNECTED");
 
-        this.$root.$emit('socketConnected', client);
+        this.$root.$emit('socketConnected', this.$socket);
 
     }, (err) => {
       console.log(err);

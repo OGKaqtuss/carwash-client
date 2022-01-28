@@ -10,7 +10,7 @@
       </template>
 
       <template v-else>
-        <v-col v-for="i in 3" :key="i" cols="11" sm="6" md="4">
+        <v-col v-for="i in 6" :key="i" cols="11" sm="6" md="4">
           <v-skeleton-loader type="card, text"></v-skeleton-loader>
         </v-col>
       </template>
@@ -23,7 +23,7 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 
 import MobileScrollerRow from '@/components/Utils/MobileScrollerRow.vue';
-import carwashService, { WashStatus } from '@/services/carwash.service';
+import carwashService, { WashStatusEnum } from '@/services/carwash.service';
 
 import userService from '@/services/user.service';
 import CarWashCard from '@/components/CarWashCard.vue';
@@ -36,11 +36,28 @@ import CarWashCard from '@/components/CarWashCard.vue';
 })
 export default class CarWashes extends Vue {
   carWashes = [];
+  subscription = null;
 
-  mounted() {
-    this.$root.$on('socketConnected', (client) => {
+  created() {
+    if (this.$socket.connected) {
+      this.subscribeEvents();
+    } else {
+      this.$root.$on('socketConnected', () => {
+        this.subscribeEvents();
+      });
+    }
 
-      client.subscribe('/queue/testqueue', (message) => {
+    this.loadCarWashList();
+  }
+
+  destroyed() {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+  }
+
+  subscribeEvents() {
+    this.subscription = this.$socket.subscribe('/queue/testqueue', (message) => {
         const data = JSON.parse(message.body);
 
         const carWash = this.findCarWash(data.CarwashId);
@@ -48,11 +65,9 @@ export default class CarWashes extends Vue {
         if (carWash) {
           carWash.status = data.Status;
           carWash.endDate = data.EndDate;
+          carWash.startDate = data.StartDate;
         }
-      });
     });
-
-    this.loadCarWashList();
   }
 
   // Find carwash item by id
@@ -67,7 +82,7 @@ export default class CarWashes extends Vue {
   }
 
   get washAvailable() {
-    return WashStatus.Available;
+    return WashStatusEnum.Available;
   }
 
   get user() {

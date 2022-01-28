@@ -11,11 +11,14 @@
             <v-card-text>
                 <div>{{ carWash.address }}</div>
 
-                <div>{{ timerCount }}</div>
+                <div>{{ timerCountString }}</div>
+
+                <div>Price: {{ price }}</div>
             </v-card-text>
 
             <v-card-actions v-if="isLoggedIn">
                 <v-btn :loading="isLoading" v-if="canStart" color="primary" @click="start()">Start</v-btn>
+                <v-btn :loading="isLoading" v-else-if="isRunning" color="warning">Running</v-btn>
                 <v-btn :loading="isLoading" v-else color="error">Stopped</v-btn>
             </v-card-actions>
         </v-card>
@@ -23,10 +26,10 @@
 </template>
 
 <script>
-import carwashService, { WashStatus } from '@/services/carwash.service';
+import carwashService, { WashStatusEnum } from '@/services/carwash.service';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import Watch from 'vue-property-decorator';
+import { Watch } from 'vue-property-decorator';
 
 import userService from '@/services/user.service';
 
@@ -42,50 +45,65 @@ export default class CarWashCard extends Vue {
     timerCount = 0;
     isLoading = false;
 
+    created() {
+        this.carWash.startDate = new Date().getTime();
+    }
+
     @Watch('timerCount', {
         immediate: true
     })
     countDownTimer() {
         if (this.timerCount > 0) {
             setTimeout(() => {
-                this.timerCount--;
+                this.timerCount = Math.max(--this.timerCount, 0);
             }, 1000);
         }
     }
 
-    @Watch('carWash.endDate')
+    @Watch('carWash', {
+        deep: true
+    })
     updateTimer() {
-        this.timerCount = this.getCountdown(this.carWash.endDate);
-    }
+        const date = this.carWash.endDate;
+        const now = this.carWash.startDate;
 
-    // Function to count down to date
-    getCountdown(milliseconds) {
-        const date = new Date(milliseconds);
+        const diff = date - now;
 
-        const now = new Date();
-        const diff = date.getTime() - now.getTime();
-
-        if (diff < 0) {
-            return '0';
+        if (diff > 0 && this.carWash.status === WashStatusEnum.Running) {
+            this.timerCount = Math.floor((diff % (1000 * 60)) / 1000);
+        } else {
+            this.timerCount = 0;
         }
-
-        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
-        return seconds;
     }
 
     start() {
         this.isLoading = true;
 
         carwashService.startCarWash(this.carWash.id).then((res) => {
-            this.carWash.status = WashStatus.Running;
+            this.carWash.status = WashStatusEnum.Running;
 
             this.isLoading = false;
         });
     }
 
+    get timerCountString() {
+        return `00:${('0' + this.timerCount).slice(-2)}`;
+    }
+
+    get price() {
+        if (this.user && this.user.isSubscribed) {
+            return 'With subscription';
+        }
+
+        return `${this.carWash.price}-,`;
+    }
+
+    get isRunning() {
+        return this.carWash.status === WashStatusEnum.Running;
+    }
+
     get canStart() {
-        return this.carWash.status === WashStatus.Available;
+        return this.carWash.status === WashStatusEnum.Available;
     }
 
     get user() {

@@ -1,10 +1,12 @@
 <template>
     <div class="user-profile__overview">
         <v-row>
-            <v-col md="6">
-                <h2 v-if="user.isAdmin">Admin</h2>
+            <v-col v-if="user.isAdmin" cols="12">
+                <WashStatus ></WashStatus>
+            </v-col>
 
-                <WashHistory v-else></WashHistory>
+            <v-col md="12" lg="6">
+                <WashHistory></WashHistory>
             </v-col>
         </v-row>
     </div>
@@ -15,11 +17,13 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 
 import WashHistory from '@/components/User/WashHistory.vue';
+import WashStatus from '@/components/User/Admin/WashStatus.vue';
 import userService from '@/services/user.service';
 
 @Component({
     components: {
-        WashHistory
+        WashHistory,
+        WashStatus
     }
 })
 export default class UserOverview extends Vue {
